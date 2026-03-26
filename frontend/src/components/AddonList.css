@@ -1,0 +1,269 @@
+.addon-list {
+  color: #c5a572;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.list-header h2 {
+  margin: 0;
+  font-size: 2.2rem;
+  color: #d4a554;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.addon-count {
+  background: rgba(197, 165, 114, 0.1);
+  color: #c5a572;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #1a1a1a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  color: #c5a572;
+}
+
+.error {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  color: #888;
+}
+
+.empty-state svg {
+  color: #c5a572;
+  opacity: 0.3;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state p {
+  font-size: 1.3rem;
+  color: #c5a572;
+  margin: 0 0 0.5rem;
+}
+
+.empty-state span {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.addons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.addon-card {
+  background: linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%);
+  border: 1px solid #1a1a1a;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.addon-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #c5a572, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.addon-card:hover::before {
+  opacity: 1;
+}
+
+.addon-card:hover {
+  border-color: #c5a572;
+  box-shadow: 0 8px 24px rgba(197, 165, 114, 0.15);
+  transform: translateY(-4px);
+}
+
+.card-header {
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgba(197, 165, 114, 0.05) 0%, transparent 100%);
+  border-bottom: 1px solid #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.category-icon {
+  color: #c5a572;
+  opacity: 0.6;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(197, 165, 114, 0.3));
+  transition: all 0.3s ease;
+}
+
+.addon-card:hover .category-icon {
+  opacity: 1;
+  color: #d4a554;
+  transform: scale(1.1);
+}
+
+.addon-name {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.addon-name h3 {
+  margin: 0;
+  color: #d4a554;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.status-badge.active {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+
+.status-badge.inactive {
+  background: rgba(58, 58, 58, 0.3);
+  color: #888;
+  border: 1px solid #3a3a3a;
+}
+
+.addon-details {
+  padding: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.detail-row svg {
+  color: #c5a572;
+  flex-shrink: 0;
+}
+
+.detail-row.rating {
+  color: #d4a554;
+  font-weight: 600;
+}
+
+.detail-row.link a {
+  color: #c5a572;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.detail-row.link a:hover {
+  color: #d4a554;
+  text-decoration: underline;
+}
+
+.notes-section {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 2px solid #c5a572;
+}
+
+.notes-section p {
+  margin: 0;
+  color: #777;
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.card-footer {
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid #1a1a1a;
+}
+
+.delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background: transparent;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  width: 100%;
+  justify-content: center;
+}
+
+.delete-btn:hover {
+  background: #e74c3c;
+  color: #000000;
+}
+
+@media (max-width: 768px) {
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .addons-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .category-icon {
+    align-self: center;
+  }
+}
