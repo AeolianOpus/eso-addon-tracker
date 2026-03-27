@@ -2,7 +2,7 @@ from fastapi import HTTPException, Cookie
 from typing import Optional
 
 
-async def get_current_user_id(session_user_id: Optional[str] = Cookie(None)) -> int:
+def get_current_user_id(session_user_id: Optional[str] = Cookie(None)) -> int:
     """
     Get current user ID from session cookie.
     Raises 401 if not authenticated.
