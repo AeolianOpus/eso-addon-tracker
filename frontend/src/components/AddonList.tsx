@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getAllAddons, deleteAddon } from '../services/api';
 import type { Addon } from '../types/addon';
+import FilterBar from './FilterBar';
 import { 
   Trash2, 
   User, 
@@ -10,19 +11,35 @@ import {
   Link as LinkIcon, 
   CheckCircle, 
   XCircle,
-  Swords,        // Combat
-  Layout,        // UI
-  Map,           // Map
-  Hammer,        // Crafting
-  ShoppingCart,  // Trading
-  Box            // Other/Default
+  Swords,
+  Layout,
+  Map,
+  Hammer,
+  ShoppingCart,
+  Box,
+  Code,
+  ChevronDown,
+  ChevronUp,
+  Edit
 } from 'lucide-react';
 import './AddonList.css';
 
-function AddonList() {
+interface AddonListProps {
+  onEdit: (addon: Addon) => void;
+}
+
+function AddonList({ onEdit }: AddonListProps) {
   const [addons, setAddons] = useState<Addon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedCode, setExpandedCode] = useState<number | null>(null);
+
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [modifiedFilter, setModifiedFilter] = useState<boolean | null>(null);
+  const [sortBy, setSortBy] = useState('name');
 
   useEffect(() => {
     loadAddons();
@@ -54,7 +71,6 @@ function AddonList() {
     }
   };
 
-  // Function to get icon based on category
   const getCategoryIcon = (category?: string) => {
     const iconProps = { size: 48, strokeWidth: 1.5 };
     
@@ -74,6 +90,47 @@ function AddonList() {
     }
   };
 
+  const toggleCodeExpand = (addonId: number) => {
+    setExpandedCode(expandedCode === addonId ? null : addonId);
+  };
+
+  // Filter and sort addons
+  const filteredAddons = addons
+    .filter(addon => {
+      // Search filter
+      const matchesSearch = 
+        addon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (addon.author && addon.author.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      // Category filter
+      const matchesCategory = !categoryFilter || addon.category === categoryFilter;
+      
+      // Status filter
+      const matchesStatus = 
+        !statusFilter ||
+        (statusFilter === 'active' && addon.is_active) ||
+        (statusFilter === 'inactive' && !addon.is_active);
+      
+      // Modified filter
+      const matchesModified = 
+        modifiedFilter === null ||
+        addon.has_custom_changes === modifiedFilter;
+      
+      return matchesSearch && matchesCategory && matchesStatus && matchesModified;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'rating':
+          return (b.rating || 0) - (a.rating || 0);
+        case 'category':
+          return (a.category || '').localeCompare(b.category || '');
+        default:
+          return 0;
+      }
+    });
+
   if (loading) return <div className="loading">Loading addons...</div>;
   if (error) return <div className="error">{error}</div>;
 
@@ -81,8 +138,23 @@ function AddonList() {
     <div className="addon-list">
       <div className="list-header">
         <h2>My Collection</h2>
-        <div className="addon-count">{addons.length} Addon{addons.length !== 1 ? 's' : ''}</div>
+        <div className="addon-count">{filteredAddons.length} of {addons.length} Addon{addons.length !== 1 ? 's' : ''}</div>
       </div>
+
+      {addons.length > 0 && (
+        <FilterBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          categoryFilter={categoryFilter}
+          onCategoryChange={setCategoryFilter}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          modifiedFilter={modifiedFilter}
+          onModifiedChange={setModifiedFilter}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
+      )}
       
       {addons.length === 0 ? (
         <div className="empty-state">
@@ -90,9 +162,15 @@ function AddonList() {
           <p>No addons in your collection yet</p>
           <span>Click "Add New" to start tracking your ESO addons</span>
         </div>
+      ) : filteredAddons.length === 0 ? (
+        <div className="empty-state">
+          <Package size={64} strokeWidth={1} />
+          <p>No addons match your filters</p>
+          <span>Try adjusting your search or filters</span>
+        </div>
       ) : (
         <div className="addons-grid">
-          {addons.map(addon => (
+          {filteredAddons.map(addon => (
             <div key={addon.id} className="addon-card">
               <div className="card-header">
                 <div className="category-icon">
@@ -100,9 +178,17 @@ function AddonList() {
                 </div>
                 <div className="addon-name">
                   <h3>{addon.name}</h3>
-                  <div className={`status-badge ${addon.is_active ? 'active' : 'inactive'}`}>
-                    {addon.is_active ? <CheckCircle size={14} /> : <XCircle size={14} />}
-                    <span>{addon.is_active ? 'Active' : 'Inactive'}</span>
+                  <div className="badges-row">
+                    <div className={`status-badge ${addon.is_active ? 'active' : 'inactive'}`}>
+                      {addon.is_active ? <CheckCircle size={14} /> : <XCircle size={14} />}
+                      <span>{addon.is_active ? 'Active' : 'Inactive'}</span>
+                    </div>
+                    {addon.has_custom_changes && (
+                      <div className="code-badge">
+                        <Code size={14} />
+                        <span>Modified</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -145,9 +231,48 @@ function AddonList() {
                     <p>{addon.personal_notes}</p>
                   </div>
                 )}
+
+                {addon.has_custom_changes && (
+                  <div className="code-changes-display">
+                    <button 
+                      className="code-toggle"
+                      onClick={() => toggleCodeExpand(addon.id)}
+                    >
+                      <Code size={16} />
+                      <span>View Code Modifications</span>
+                      {expandedCode === addon.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </button>
+
+                    {expandedCode === addon.id && (
+                      <div className="code-content">
+                        {addon.code_line_range && (
+                          <div className="line-range">
+                            Lines: {addon.code_line_range}
+                          </div>
+                        )}
+                        
+                        <div className="code-comparison">
+                          <div className="code-block original">
+                            <div className="code-label">Original</div>
+                            <pre><code>{addon.original_code}</code></pre>
+                          </div>
+                          
+                          <div className="code-block modified">
+                            <div className="code-label">Modified</div>
+                            <pre><code>{addon.modified_code}</code></pre>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="card-footer">
+                <button className="edit-btn" onClick={() => onEdit(addon)}>
+                  <Edit size={16} />
+                  <span>Edit</span>
+                </button>
                 <button className="delete-btn" onClick={() => handleDelete(addon.id)}>
                   <Trash2 size={16} />
                   <span>Delete</span>

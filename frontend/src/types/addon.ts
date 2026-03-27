@@ -10,6 +10,10 @@ export interface Addon {
   is_active: boolean;
   personal_notes?: string;
   rating?: number;
+  has_custom_changes: boolean;
+  code_line_range?: string;
+  original_code?: string;
+  modified_code?: string;
 }
 
 export interface CreateAddonRequest {
@@ -23,6 +27,10 @@ export interface CreateAddonRequest {
   is_active: boolean;
   personal_notes?: string;
   rating?: number;
+  has_custom_changes: boolean;
+  code_line_range?: string;
+  original_code?: string;
+  modified_code?: string;
 }
 
 export interface ApiError {

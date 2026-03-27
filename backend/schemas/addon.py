@@ -13,6 +13,10 @@ class AddonBase(BaseModel):
     is_active: bool = Field(True, description="Is addon currently active")
     personal_notes: Optional[str] = Field(None, description="Personal notes about the addon")
     rating: Optional[int] = Field(None, ge=1, le=5, description="Rating from 1-5")
+    has_custom_changes: bool = Field(False, description="Has custom code modifications")
+    code_line_range: Optional[str] = Field(None, description="Line range of changes (e.g., '600-612')")
+    original_code: Optional[str] = Field(None, description="Original code before modifications")
+    modified_code: Optional[str] = Field(None, description="Modified code after changes")
 
 class AddonCreate(AddonBase):
     pass
@@ -28,6 +32,10 @@ class AddonUpdate(BaseModel):
     is_active: Optional[bool] = None
     personal_notes: Optional[str] = None
     rating: Optional[int] = None
+    has_custom_changes: Optional[bool] = None
+    code_line_range: Optional[str] = None
+    original_code: Optional[str] = None
+    modified_code: Optional[str] = None
 
 class Addon(AddonBase):
     id: int
