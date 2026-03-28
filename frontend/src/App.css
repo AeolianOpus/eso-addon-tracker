@@ -8,3 +8,17 @@
   margin: 0 auto;
   padding: 2rem;
 }
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+}
+
+.loading-content {
+  color: #c5a572;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}

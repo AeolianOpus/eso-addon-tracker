@@ -1,25 +1,45 @@
-import { Shield, Swords, Crown } from 'lucide-react';
+import { Shield, Swords, Crown, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import './Header.css';
 
 function Header() {
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    if (confirm('Are you sure you want to logout?')) {
+      await logout();
+    }
+  };
+
   return (
-    <div className="header">
+    <header className="header">
       <div className="header-content">
-        <div className="logo-section">
-          <div className="logo-icon">
-            <Shield size={48} strokeWidth={1.5} />
-            <Crown size={24} className="crown-overlay" />
+        <div className="header-logo">
+          <div className="logo-icons">
+            <Swords className="swords-left" size={28} strokeWidth={1.5} />
+            <div className="crown-shield">
+              <Crown size={20} strokeWidth={1.5} className="crown" />
+              <Shield size={40} strokeWidth={1.5} className="shield" />
+            </div>
+            <Swords className="swords-right" size={28} strokeWidth={1.5} />
           </div>
-          <div className="logo-text">
-            <h1>ESO ADDON</h1>
-            <span className="subtitle">TRACKER</span>
+          <div className="header-text">
+            <h1>ESO Addon Tracker</h1>
+            <p>Manage Your Elder Scrolls Online Addons</p>
           </div>
         </div>
-        <div className="header-decoration">
-          <Swords size={32} strokeWidth={1.5} />
-        </div>
+        
+        {user && (
+          <div className="header-user">
+            <span className="username">{user.username}</span>
+            <button onClick={handleLogout} className="logout-btn">
+              <LogOut size={18} />
+              <span>Logout</span>
+            </button>
+          </div>
+        )}
       </div>
-    </div>
+    </header>
   );
 }
 

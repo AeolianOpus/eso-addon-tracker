@@ -14,6 +14,11 @@ node_modules/
 dist/
 build/
 
+# Cypress artifacts (test files themselves should be committed)
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
 # IDEs
 .vscode/
 .idea/
