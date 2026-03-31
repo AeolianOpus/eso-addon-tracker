@@ -41,7 +41,7 @@ async def register(user_data: UserRegister, response: Response, db: Session = De
         key="access_token",
         value=access_token,
         httponly=True,
-        max_age=1800,  # 30 minutes
+        max_age=86400,  # 24 hours
         samesite="lax",
         secure=False
     )
@@ -69,7 +69,7 @@ async def login(user_data: UserLogin, response: Response, db: Session = Depends(
         key="access_token",
         value=access_token,
         httponly=True,  # Prevents JavaScript access
-        max_age=1800,   # 30 minutes
+        max_age=86400,  # 24 hours
         samesite="lax",
         secure=False
     )

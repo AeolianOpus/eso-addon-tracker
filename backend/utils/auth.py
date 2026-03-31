@@ -6,7 +6,7 @@ from fastapi import HTTPException, Cookie
 # Secret key for JWT - in production, use environment variable!
 SECRET_KEY = "your-secret-key-change-this-in-production-eso-addon-tracker"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 1440
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
