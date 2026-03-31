@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Date, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, Date, Text, JSON, ForeignKey
 from config.database import Base
 
 class Addon(Base):
@@ -16,11 +16,9 @@ class Addon(Base):
     personal_notes = Column(Text)
     rating = Column(Integer)
     
-    # Code changes fields
+    # Code changes — stores array of {file_name, line_range, original_code, modified_code}
     has_custom_changes = Column(Boolean, default=False)
-    code_line_range = Column(String)
-    original_code = Column(Text)
-    modified_code = Column(Text)
+    code_modifications = Column(JSON, default=[])
     
     # Link to user
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)

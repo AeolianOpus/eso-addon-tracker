@@ -232,36 +232,36 @@ function AddonList({ onEdit }: AddonListProps) {
                   </div>
                 )}
 
-                {addon.has_custom_changes && (
+                {addon.has_custom_changes && addon.code_modifications?.length > 0 && (
                   <div className="code-changes-display">
                     <button 
                       className="code-toggle"
                       onClick={() => toggleCodeExpand(addon.id)}
                     >
                       <Code size={16} />
-                      <span>View Code Modifications</span>
+                      <span>View Code Modifications ({addon.code_modifications.length})</span>
                       {expandedCode === addon.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </button>
 
                     {expandedCode === addon.id && (
                       <div className="code-content">
-                        {addon.code_line_range && (
-                          <div className="line-range">
-                            Lines: {addon.code_line_range}
+                        {addon.code_modifications.map((mod, index) => (
+                          <div key={index} className="modification-block">
+                            <div className="line-range">
+                              {mod.file_name} — Lines {mod.line_range}
+                            </div>
+                            <div className="code-comparison">
+                              <div className="code-block original">
+                                <div className="code-label">Original</div>
+                                <pre><code>{mod.original_code}</code></pre>
+                              </div>
+                              <div className="code-block modified">
+                                <div className="code-label">Modified</div>
+                                <pre><code>{mod.modified_code}</code></pre>
+                              </div>
+                            </div>
                           </div>
-                        )}
-                        
-                        <div className="code-comparison">
-                          <div className="code-block original">
-                            <div className="code-label">Original</div>
-                            <pre><code>{addon.original_code}</code></pre>
-                          </div>
-                          
-                          <div className="code-block modified">
-                            <div className="code-label">Modified</div>
-                            <pre><code>{addon.modified_code}</code></pre>
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     )}
                   </div>

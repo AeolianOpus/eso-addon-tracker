@@ -17,7 +17,10 @@ async def create_addon(
     user_id: int = Depends(get_current_user_id)
 ):
     """Create a new addon for the authenticated user"""
-    db_addon = Addon(**addon.model_dump(), user_id=user_id)
+    addon_data = addon.model_dump()
+    # Serialize CodeModification objects to dicts for JSON column
+    addon_data["code_modifications"] = [m.model_dump() if hasattr(m, 'model_dump') else m for m in addon_data.get("code_modifications", [])]
+    db_addon = Addon(**addon_data, user_id=user_id)
     db.add(db_addon)
     db.commit()
     db.refresh(db_addon)
@@ -68,6 +71,8 @@ async def update_addon(
         raise HTTPException(status_code=404, detail="Addon not found")
     
     for key, value in addon_update.model_dump(exclude_unset=True).items():
+        if key == "code_modifications" and value is not None:
+            value = [m.model_dump() if hasattr(m, 'model_dump') else m for m in value]
         setattr(addon, key, value)
     
     db.commit()

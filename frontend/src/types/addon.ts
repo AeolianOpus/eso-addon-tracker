@@ -1,3 +1,10 @@
+export interface CodeModification {
+  file_name: string;
+  line_range: string;
+  original_code: string;
+  modified_code: string;
+}
+
 export interface Addon {
   id: number;
   name: string;
@@ -11,9 +18,7 @@ export interface Addon {
   personal_notes?: string;
   rating?: number;
   has_custom_changes: boolean;
-  code_line_range?: string;
-  original_code?: string;
-  modified_code?: string;
+  code_modifications: CodeModification[];
 }
 
 export interface CreateAddonRequest {
@@ -28,9 +33,7 @@ export interface CreateAddonRequest {
   personal_notes?: string;
   rating?: number;
   has_custom_changes: boolean;
-  code_line_range?: string;
-  original_code?: string;
-  modified_code?: string;
+  code_modifications: CodeModification[];
 }
 
 export interface ApiError {
